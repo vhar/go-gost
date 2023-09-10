@@ -220,7 +220,7 @@ func (s *Sign) GetReport() Report {
 	report.Validity, _ = s.Verify()
 
 	signingTime, _ := s.GetSigningTume()
-	report.SigningTime = signingTime.Format("03.02.2006 15:04:05 MST")
+	report.SigningTime = signingTime.Format("02.01.2006 15:04:05 MST")
 
 	return report
 }
