@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-type Response struct {
-	Status string `json:"status"`
-	Error  string `json:"error,omitempty"`
+type Err struct {
+	Message string `json:"message"`
+	Code    int    `json:"code"`
 }
 
 const (
@@ -19,9 +19,13 @@ const (
 func ErrorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(httpStatusCode)
-	resp := make(map[string]any)
-	resp["error"] = message
-	resp["code"] = httpStatusCode
+	resp := make(map[string]Err)
+
+	resp["error"] = Err{
+		Message: message,
+		Code:    httpStatusCode,
+	}
+
 	jsonResp, _ := json.Marshal(resp)
 	w.Write(jsonResp)
 }
@@ -29,9 +33,11 @@ func ErrorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 func DataResponse(w http.ResponseWriter, body any, httpStatusCode int) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(httpStatusCode)
+	resp := make(map[string]any)
 
-	jsonResp, err := json.Marshal(body)
+	resp["payload"] = body
 
+	jsonResp, err := json.Marshal(resp)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
