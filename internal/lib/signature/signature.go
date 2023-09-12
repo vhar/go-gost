@@ -175,14 +175,13 @@ func (s *Sign) GetSigner() Signer {
 	signer := Signer{}
 
 	names := s.p7.GetOnlySigner().Subject.Names
-
 	for _, attr := range names {
 		if asn1.ObjectIdentifier.Equal(attr.Type, OIDCommonName) {
 			signer.CommonName = attr.Value.(string)
 		} else if asn1.ObjectIdentifier.Equal(attr.Type, OIDSurname) {
 			signer.Surname = attr.Value.(string)
 		} else if asn1.ObjectIdentifier.Equal(attr.Type, OIDCountryName) {
-			signer.CommonName = attr.Value.(string)
+			signer.CountryName = attr.Value.(string)
 		} else if asn1.ObjectIdentifier.Equal(attr.Type, OIDLocalityName) {
 			signer.LocalityName = attr.Value.(string)
 		} else if asn1.ObjectIdentifier.Equal(attr.Type, OIDStateOrProvinceName) {
