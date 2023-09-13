@@ -22,6 +22,9 @@ type Server struct {
 	BindAddr    string        `yaml:"bind_addr"`
 	Timeout     time.Duration `yaml:"timeout"`
 	IdleTimeout time.Duration `yaml:"idle_timeout"`
+	SSLEnabled  bool          `yaml:"ssl_enabld"`
+	KeyChain    string        `yaml:"ssl_chain"`
+	PrivateKey  string        `yaml:"ssl_key"`
 }
 
 type Client struct {

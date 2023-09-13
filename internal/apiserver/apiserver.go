@@ -30,8 +30,6 @@ func New(config *config.Config) *APIServer {
 func (s *APIServer) Start() error {
 	s.configureRoutes()
 
-	s.logger.Info("Запкскаем API Server...")
-
 	serv := &http.Server{
 		Addr:         s.config.Server.BindAddr,
 		Handler:      s.router,
@@ -40,8 +38,18 @@ func (s *APIServer) Start() error {
 		IdleTimeout:  s.config.Server.IdleTimeout,
 	}
 
-	if err := serv.ListenAndServe(); err != nil {
-		return fmt.Errorf("Ощибка запуска api сервера. %s", err.Error())
+	if s.config.Server.SSLEnabled == true {
+		s.logger.Info("Запускаем API Server с SSL...")
+
+		if err := serv.ListenAndServeTLS(s.config.Server.KeyChain, s.config.Server.PrivateKey); err != nil {
+			return fmt.Errorf("Ощибка запуска api сервера. %s", err.Error())
+		}
+	} else {
+		s.logger.Info("Запускаем API Server без SSL...")
+
+		if err := serv.ListenAndServe(); err != nil {
+			return fmt.Errorf("Ощибка запуска api сервера. %s", err.Error())
+		}
 	}
 
 	return nil
