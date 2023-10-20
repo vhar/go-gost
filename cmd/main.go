@@ -7,6 +7,8 @@ import (
 	"log"
 	"log/slog"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -19,9 +21,12 @@ const (
 	envProd  = "prod"
 )
 
+func init() {
+	godotenv.Load()
+}
+
 func main() {
 	config := config.MustLoad()
-
 	if err := configureLogger(config); err != nil {
 		log.Fatal(err.Error())
 	}

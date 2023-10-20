@@ -56,9 +56,13 @@ func (s *APIServer) Start() error {
 }
 
 func (s *APIServer) configureRoutes() {
-	s.router.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"http://*"},
-	}))
+	s.router.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"POST"},
+		AllowedHeaders:   []string{"Accept", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}).Handler)
 
 	h := handlers.New(s.config.Client, s.logger)
 

@@ -7,7 +7,7 @@ import (
 )
 
 type Handler struct {
-	config *config.Client
+	config config.Client
 	logger *slog.Logger
 }
 
@@ -19,7 +19,7 @@ type report struct {
 	Validity    bool
 }
 
-func New(config *config.Client, logger *slog.Logger) *Handler {
+func New(config config.Client, logger *slog.Logger) *Handler {
 	return &Handler{
 		config: config,
 		logger: logger,

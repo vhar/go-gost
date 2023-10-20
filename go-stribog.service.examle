@@ -1,0 +1,9 @@
+[Unit]
+Description=GO GOST REST API Service
+
+[Service]
+WorkingDirectory=/opt/go-stribog
+ExecStart=/opt/go-stribog/go-stribog &
+
+[Install]
+WantedBy=multi-user.target
