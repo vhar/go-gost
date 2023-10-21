@@ -59,7 +59,7 @@ func (s *APIServer) configureRoutes() {
 	s.router.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"POST"},
-		AllowedHeaders:   []string{"Accept", "Content-Type"},
+		AllowedHeaders:   []string{"Origin", "Accept", "Content-Type"},
 		AllowCredentials: true,
 		MaxAge:           300,
 	}).Handler)
