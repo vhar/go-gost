@@ -32,17 +32,17 @@
     </div>
     <script>
         function verify() {
-            let doc = document.querySelector('#document');
-            let sig = document.querySelector('#signature');
+            let doc = document.querySelector("#document");
+            let sig = document.querySelector("#signature");
 
             if (!doc.files[0]) {
-                alert('не выбран  документ');
+                alert("не выбран  документ");
             } else if (!sig.files[0]) {
-                alert('не выбран файл подписи');
+                alert("не выбран файл подписи");
             } else {
                 let formData = new FormData();
-                formData.append('document', doc.files[0]);
-                formData.append('signature', sig.files[0]);
+                formData.append("document", doc.files[0]);
+                formData.append("signature", sig.files[0]);
 
                 fetch("http://localhost:8080/vfile", {
                     method: "POST",
@@ -65,15 +65,16 @@
         }
 
         function showResult(result) {
-            const container = document.querySelector('#result');
-            container.innerHTML = '';
+            const container = document.querySelector("#result");
+            container.innerHTML = "";
 
-            const h1 = document.createElement('h1');
-            const h1Text = document.createTextNode('Результат проверки электронной подписи');
+            const h1 = document.createElement("h1");
+            const h1Text = document.createTextNode("Результат проверки электронной подписи");
             h1.appendChild(h1Text);
+            container.appendChild(h1);
 
-            const h4 = document.createElement('h4');
-            let tmpText = '';
+            const h4 = document.createElement("h4");
+            let tmpText = "";
 
             if (result.payload.Validity) {
                 tmpText = "Подпись подтверждена. Подпись была создана для проверяемого документа, и он после этого не был изменён.";
@@ -82,31 +83,42 @@
             }
             const h4Text = document.createTextNode(tmpText);
             h4.appendChild(h4Text);
-            h1.appendChild(h4);
-            container.appendChild(h1);
+            container.appendChild(h4);
 
-            const wrapper = document.createElement('div');
-            const orgDiv = document.createElement('div');
+            const wrapper = document.createElement("div");
+
+            const org = document.createElement("div");
+            const orgTitle = document.createTextNode("Организация:");
+            org.appendChild(orgTitle);
+            wrapper.appendChild(org);
+
+            const orgDiv = document.createElement("div");
             const orgName = document.createTextNode(result.payload.Signer.CommonName);
             orgDiv.appendChild(orgName);
             wrapper.appendChild(orgDiv);
 
-            const detailsDiv = document.createElement('div');
+            const locationDiv = document.createElement("div");
             const countryName = document.createTextNode(result.payload.Signer.CountryName);
-            detailsDiv.appendChild(countryName);
-
+            locationDiv.appendChild(countryName);
             if (result.payload.Signer.StateOrProvinceName) {
-                const stateName = document.createTextNode(', ' + result.payload.Signer.StateOrProvinceName);
-                detailsDiv.appendChild(stateName);
+                const stateName = document.createTextNode(", " + result.payload.Signer.StateOrProvinceName);
+                locationDiv.appendChild(stateName);
             }
+            wrapper.appendChild(locationDiv);
 
-            const signerNameDiv = document.createElement('div');
-            const signerName = document.createTextNode(result.payload.Signer.Surname + ' ' + result.payload.Signer.GivenName);
+            const detailsDiv = document.createElement("div");
+            const sig = document.createElement("div");
+            const sigTitle = document.createTextNode("Подписант:");
+            sig.appendChild(sigTitle);
+            detailsDiv.appendChild(sig);
+            
+            const signerNameDiv = document.createElement("div");
+            const signerName = document.createTextNode(result.payload.Signer.Surname + " " + result.payload.Signer.GivenName);
             signerNameDiv.appendChild(signerName);
             detailsDiv.appendChild(signerNameDiv);
 
-            const signerTitleDiv = document.createElement('div');
-            tmpText = 'должность не указана';
+            const signerTitleDiv = document.createElement("div");
+            tmpText = "должность не указана";
             if(result.payload.Signer.Title) {
                 tmpText = this.result.payload.Signer.Title;
             }
@@ -115,49 +127,51 @@
             detailsDiv.appendChild(signerTitleDiv);
 
             if(result.payload.Signer.EmailAddress) {
-                const signerMailLink = document/createElement('a');
-                signerMailLink.setAttribute("href", 'mailto: ' + result.payload.Signer.EmailAddress);
+                const signerMailLink = document/createElement("a");
+                signerMailLink.setAttribute("href", "mailto: " + result.payload.Signer.EmailAddress);
                 const signerMailText = document.createTextNode(result.payload.Signer.EmailAddress);
                 signerMailLink.appendChild(signerMailText);
                 detailsDiv.appendChild(signerMailLink);
             }
             
-            const cert = document.createElement('div');
-            const certTitle = document.createTextNode('Сертификат:');
+            const cert = document.createElement("div");
+            const certTitle = document.createTextNode("Сертификат:");
             cert.appendChild(certTitle);
             detailsDiv.appendChild(cert);
 
-            const certIssuerDiv = document.createElement('div');
-            const certIssuerText = document.createTextNode('Выдан: ' + result.payload.Certificate.IssuerName);
+            const certIssuerDiv = document.createElement("div");
+            const certIssuerText = document.createTextNode("Выдан: " + result.payload.Certificate.IssuerName);
             certIssuerDiv.appendChild(certIssuerText);
             detailsDiv.appendChild(certIssuerDiv);
 
-            const certDateNotBeforeDiv = document.createElement('div');
-            const certDateNotBeforeText = document.createTextNode('Дата выдачи: ' + result.payload.Certificate.NotBefore);
+            const certDateNotBeforeDiv = document.createElement("div");
+            const certDateNotBeforeText = document.createTextNode("Дата выдачи: " + result.payload.Certificate.NotBefore);
             certDateNotBeforeDiv.appendChild(certDateNotBeforeText);
             detailsDiv.appendChild(certDateNotBeforeDiv);
 
-            const certDateNotAfterDiv = document.createElement('div');
-            const certDateNotAfterText = document.createTextNode('Действителен до: ' + result.payload.Certificate.NotAfter);
+            const certDateNotAfterDiv = document.createElement("div");
+            const certDateNotAfterText = document.createTextNode("Действителен до: " + result.payload.Certificate.NotAfter);
             certDateNotAfterDiv.appendChild(certDateNotAfterText);
             detailsDiv.appendChild(certDateNotAfterDiv);
 
-            const certEncriptionDiv = document.createElement('div');
-            const certEncriptionText = document.createTextNode('Алгоритм шифрования: ' + result.payload.Certificate.EncriptionAlgorithm);
+            const certEncriptionDiv = document.createElement("div");
+            const certEncriptionText = document.createTextNode("Алгоритм шифрования: " + result.payload.Certificate.EncriptionAlgorithm);
             certEncriptionDiv.appendChild(certEncriptionText);
             detailsDiv.appendChild(certEncriptionDiv);
 
-            const certDigestDiv = document.createElement('div');
-            const certDigestText = document.createTextNode('Алгоритм шифрования: ' + result.payload.Certificate.DigestAlgorithm);
+            const certDigestDiv = document.createElement("div");
+            const certDigestText = document.createTextNode("Алгоритм шифрования: " + result.payload.Certificate.DigestAlgorithm);
             certDigestDiv.appendChild(certDigestText);
             detailsDiv.appendChild(certDigestDiv);
 
-            const signDateDiv = document.createElement('div');
-            const signDateText = document.createTextNode('Подпись создана: ' + result.payload.SigningTime);
+            const signDateDiv = document.createElement("div");
+            const signDateText = document.createTextNode("Подпись создана: " + result.payload.SigningTime);
             signDateDiv.appendChild(signDateText);
             detailsDiv.appendChild(signDateDiv);
 
-            container.appendChild(detailsDiv);
+            wrapper.appendChild(detailsDiv);
+
+            container.appendChild(wrapper);
         }
     </script>
 </body>
