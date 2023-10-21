@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример использования метода vfile</title>
+    <style>
+        div {
+            margin: 5px 0;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Пример использования метода /vfile</h1>
+    <form id="vfile-form">
+        <div>
+            <label for="document">Выберите подписанный документ: </label>
+            <input type="file" id="document" />
+        </div>
+        <div>
+            <label for="signature" class="btn gray">Выберите файл подписи: </label>
+            <input type="file" id="signature" accept=".sig, .p7s, .sgn" />
+        </div>
+        <div>
+            <button type="button" onclick="verify()">Проверить подпись</button>
+        </div>
+    </form>
+    <div id="result">
+    </div>
+    <script>
+        function verify() {
+            let doc = document.querySelector('#document');
+            let sig = document.querySelector('#signature');
+
+            if (!doc.files[0]) {
+                alert('не выбран  документ');
+            } else if (!sig.files[0]) {
+                alert('не выбран файл подписи');
+            } else {
+                let formData = new FormData();
+                formData.append('document', doc.files[0]);
+                formData.append('signature', sig.files[0]);
+
+                fetch("http://localhost:8080/vfile", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        return response.json().then(err => { throw new Error(err.error.message) });
+                    }
+                })
+                .then(data => {
+                    showResult(data);
+                })
+                .catch((e) => {
+                    alert(e.message);
+                });
+            }
+        }
+
+        function showResult(result) {
+            const container = document.querySelector('#result');
+            container.innerHTML = '';
+
+            const h1 = document.createElement('h1');
+            const h1Text = document.createTextNode('Результат проверки электронной подписи');
+            h1.appendChild(h1Text);
+
+            const h4 = document.createElement('h4');
+            let tmpText = '';
+
+            if (result.payload.Validity) {
+                tmpText = "Подпись подтверждена. Подпись была создана для проверяемого документа, и он после этого не был изменён.";
+            } else {
+                tmpText = "Подпись не подтверждена. Файл был модифицирован или подпись не соответствует файлу.";                
+            }
+            const h4Text = document.createTextNode(tmpText);
+            h4.appendChild(h4Text);
+            h1.appendChild(h4);
+            container.appendChild(h1);
+
+            const wrapper = document.createElement('div');
+            const orgDiv = document.createElement('div');
+            const orgName = document.createTextNode(result.payload.Signer.CommonName);
+            orgDiv.appendChild(orgName);
+            wrapper.appendChild(orgDiv);
+
+            const detailsDiv = document.createElement('div');
+            const countryName = document.createTextNode(result.payload.Signer.CountryName);
+            detailsDiv.appendChild(countryName);
+
+            if (result.payload.Signer.StateOrProvinceName) {
+                const stateName = document.createTextNode(', ' + result.payload.Signer.StateOrProvinceName);
+                detailsDiv.appendChild(stateName);
+            }
+
+            const signerNameDiv = document.createElement('div');
+            const signerName = document.createTextNode(result.payload.Signer.Surname + ' ' + result.payload.Signer.GivenName);
+            signerNameDiv.appendChild(signerName);
+            detailsDiv.appendChild(signerNameDiv);
+
+            const signerTitleDiv = document.createElement('div');
+            tmpText = 'должность не указана';
+            if(result.payload.Signer.Title) {
+                tmpText = this.result.payload.Signer.Title;
+            }
+            const signerTitle = document.createTextNode(tmpText);
+            signerTitleDiv.appendChild(signerTitle);
+            detailsDiv.appendChild(signerTitleDiv);
+
+            if(result.payload.Signer.EmailAddress) {
+                const signerMailLink = document/createElement('a');
+                signerMailLink.setAttribute("href", 'mailto: ' + result.payload.Signer.EmailAddress);
+                const signerMailText = document.createTextNode(result.payload.Signer.EmailAddress);
+                signerMailLink.appendChild(signerMailText);
+                detailsDiv.appendChild(signerMailLink);
+            }
+            
+            const cert = document.createElement('div');
+            const certTitle = document.createTextNode('Сертификат:');
+            cert.appendChild(certTitle);
+            detailsDiv.appendChild(cert);
+
+            const certIssuerDiv = document.createElement('div');
+            const certIssuerText = document.createTextNode('Выдан: ' + result.payload.Certificate.IssuerName);
+            certIssuerDiv.appendChild(certIssuerText);
+            detailsDiv.appendChild(certIssuerDiv);
+
+            const certDateNotBeforeDiv = document.createElement('div');
+            const certDateNotBeforeText = document.createTextNode('Дата выдачи: ' + result.payload.Certificate.NotBefore);
+            certDateNotBeforeDiv.appendChild(certDateNotBeforeText);
+            detailsDiv.appendChild(certDateNotBeforeDiv);
+
+            const certDateNotAfterDiv = document.createElement('div');
+            const certDateNotAfterText = document.createTextNode('Действителен до: ' + result.payload.Certificate.NotAfter);
+            certDateNotAfterDiv.appendChild(certDateNotAfterText);
+            detailsDiv.appendChild(certDateNotAfterDiv);
+
+            const certEncriptionDiv = document.createElement('div');
+            const certEncriptionText = document.createTextNode('Алгоритм шифрования: ' + result.payload.Certificate.EncriptionAlgorithm);
+            certEncriptionDiv.appendChild(certEncriptionText);
+            detailsDiv.appendChild(certEncriptionDiv);
+
+            const certDigestDiv = document.createElement('div');
+            const certDigestText = document.createTextNode('Алгоритм шифрования: ' + result.payload.Certificate.DigestAlgorithm);
+            certDigestDiv.appendChild(certDigestText);
+            detailsDiv.appendChild(certDigestDiv);
+
+            const signDateDiv = document.createElement('div');
+            const signDateText = document.createTextNode('Подпись создана: ' + result.payload.SigningTime);
+            signDateDiv.appendChild(signDateText);
+            detailsDiv.appendChild(signDateDiv);
+
+            container.appendChild(detailsDiv);
+        }
+    </script>
+</body>
+</html>
