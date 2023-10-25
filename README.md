@@ -183,6 +183,7 @@ Content-Type: multipart/form-data
   <input type="file" name="signature" />
 </form>
 ```
+>Пример использования метода можно посмотреть в файле examples/vfile.html
 
 ## Использование метода Verify URL
 Для проверки подписи необходимо отправить запрос методом **HTTP POST** на URN **/vurl**  
@@ -197,3 +198,4 @@ Content-Type: application/json
 }
 
 ```
+>Пример использования метода можно посмотреть в файле examples/vurl.html
