@@ -2,8 +2,8 @@
 Description=GO GOST REST API Service
 
 [Service]
-WorkingDirectory=/opt/go-stribog
-ExecStart=/opt/go-stribog/go-stribog &
+WorkingDirectory=/opt/go-gost
+ExecStart=/opt/go-gost/go-gost &
 
 [Install]
 WantedBy=multi-user.target

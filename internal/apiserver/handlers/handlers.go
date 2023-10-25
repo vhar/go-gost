@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"go-stribog/internal/config"
-	"go-stribog/internal/lib/signature"
+	"go-gost/internal/config"
+	"go-gost/internal/lib/signature"
 	"log/slog"
 )
 

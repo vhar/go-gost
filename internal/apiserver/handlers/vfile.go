@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"fmt"
-	"go-stribog/internal/apiserver/response"
-	"go-stribog/internal/lib/signature"
+	"go-gost/internal/apiserver/response"
+	"go-gost/internal/lib/signature"
 	"io"
 	"net/http"
 )

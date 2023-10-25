@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go-stribog/internal/apiserver"
-	"go-stribog/internal/config"
+	"go-gost/internal/apiserver"
+	"go-gost/internal/config"
 	"log"
 	"log/slog"
 	"os"

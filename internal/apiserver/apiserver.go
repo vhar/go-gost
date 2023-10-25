@@ -1,8 +1,8 @@
 package apiserver
 
 import (
-	"go-stribog/internal/apiserver/handlers"
-	"go-stribog/internal/config"
+	"go-gost/internal/apiserver/handlers"
+	"go-gost/internal/config"
 	"log/slog"
 
 	"fmt"
