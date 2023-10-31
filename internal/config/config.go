@@ -25,6 +25,7 @@ type Server struct {
 	SSLEnabled  bool          `env:"SSL_ENABLE" env-default:"false"`
 	KeyChain    string        `env:"SSL_CHAIN" env-default:""`
 	PrivateKey  string        `env:"SSL_KEY" env-default:""`
+	ApiKey      string        `env:"API_KEY" env-default:""`
 }
 
 type Client struct {

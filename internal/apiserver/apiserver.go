@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"go-gost/internal/apiserver/handlers"
+	apikey "go-gost/internal/apiserver/middleware/api-key"
 	"go-gost/internal/config"
 	"log/slog"
 
@@ -56,6 +57,7 @@ func (s *APIServer) Start() error {
 }
 
 func (s *APIServer) configureRoutes() {
+	s.router.Use(apikey.Authorize(s.config.Server.ApiKey))
 	s.router.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"POST"},
