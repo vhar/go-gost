@@ -182,7 +182,11 @@ sudo systemctl disable go-gost
 
 ## Использование метода Verify File
 Для проверки подписи необходимо отправить запрос методом **HTTP POST** на URN **/vfile**  
+Заголовки: 
 Content-Type: multipart/form-data  
+Authorization: ***API_KEY***  
+>Заголовок Authorization передается если задана переменная окружения API_KEY  
+
 В теле запроса необходимо передать проверяемый документ в поле ***document*** и файл подписи в поле ***signature***
 ```
 <form method="post" action="/vfile" enctype="multipart/form-data">
@@ -194,7 +198,11 @@ Content-Type: multipart/form-data
 
 ## Использование метода Verify URL
 Для проверки подписи необходимо отправить запрос методом **HTTP POST** на URN **/vurl**  
+Заголовки:  
 Content-Type: application/json  
+Authorization: ***API_KEY***  
+>Заголовок Authorization передается если задана переменная окружения API_KEY  
+
 В теле запроса в поле ***document*** указать URL на проверяемый документ и в поле ***signature*** URL на файл с проверяемой подписью.  
 Дополнительно в теле запроса можно передать поле ***referer*** если сервер, на котором расположены проверяемые файлы не позволяет обращаться у ним напрямую.  
 ```
