@@ -24,7 +24,7 @@ go mod tidy
 ```
 Скопируйте файл ***examples/.env*** в файл ***.env***
 ```
-cp ./eaxamples/.env .env
+cp ./examples/.env .env
 ```
 Отредактируйте файл .env в соответсвии с вашими потребностями
 
