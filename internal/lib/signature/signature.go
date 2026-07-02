@@ -44,6 +44,7 @@ type Report struct {
 	Certificate Certificate
 	SigningTime string
 	Validity    bool
+	Signature   []byte
 }
 
 var (

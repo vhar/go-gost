@@ -119,6 +119,8 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	body := sign.GetReport()
 
+	body.Signature = signContent
+
 	if err = response.DataResponse(w, body, http.StatusOK); err != nil {
 		h.logger.Error(err.Error())
 		response.ErrorResponse(w, err.Error(), http.StatusBadRequest)
