@@ -182,7 +182,8 @@ docker run -d -p 80:8080 --env-file .env vhar/go-gost-alt
             "DigestAlgorithm": "ГОСТ Р 34.11-94"
         },
         "SigningTime": "09.22.2016 09:50:00 UTC",
-        "Validity": false
+        "Validity": false,
+        "Signature": "TUlJUDZBWUpLb1pJaHZjTkFRY0Nv....."
     }
 }
 ```
