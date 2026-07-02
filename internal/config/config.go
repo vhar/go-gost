@@ -20,8 +20,8 @@ type Config struct {
 
 type Server struct {
 	BindAddr    string        `env:"SERVER_BIND_ADDR" env-default:":8080"`
-	Timeout     time.Duration `env:"TIMEOUT" env-default:"5s"`
-	IdleTimeout time.Duration `env:"IDDLE" env-default:"30s"`
+	Timeout     time.Duration `env:"SERVER_TIMEOUT" env-default:"5s"`
+	IdleTimeout time.Duration `env:"SERVER_IDDLE" env-default:"30s"`
 	SSLEnabled  bool          `env:"SSL_ENABLE" env-default:"false"`
 	KeyChain    string        `env:"SSL_CHAIN" env-default:""`
 	PrivateKey  string        `env:"SSL_KEY" env-default:""`
