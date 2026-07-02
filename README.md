@@ -165,14 +165,15 @@ docker run -d -p 80:8080 --env-file .env vhar/go-gost-alt
 {
     "payload":{
         "Signer": {
-            "CommonName": "АО \"РОГА И КОПЫТА\"",
+            "CommonName": "Паниковский Михаил Самуэльевич",
             "CountryName": "RU",
             "StateOrProvinceName": "64 Саратовская область",
             "LocalityName": "Арбатов",
             "Surname": "Паниковский",
             "GivenName": "Михаил Самуэльевич",
             "Title": "Уполномоченный по рогам",
-            "EmailAddress": "misha@panikovsky.gov"
+            "EmailAddress": "misha@panikovsky.gov",
+            "Organization": "АО \"РОГА И КОПЫТА\""
         },
         "Certificate": {
             "IssuerName": "УЦ Федерального казначейства",

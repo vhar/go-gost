@@ -28,6 +28,7 @@ type Signer struct {
 	GivenName           string
 	Title               string
 	EmailAddress        string
+	Organization        string
 }
 
 type Certificate struct {
@@ -193,6 +194,8 @@ func (s *Sign) GetSigner() Signer {
 			signer.GivenName = attr.Value.(string)
 		} else if asn1.ObjectIdentifier.Equal(attr.Type, OIDEmailAddress) {
 			signer.EmailAddress = attr.Value.(string)
+		} else if asn1.ObjectIdentifier.Equal(attr.Type, OIDOrganizationName) {
+			signer.Organization = attr.Value.(string)
 		}
 	}
 
