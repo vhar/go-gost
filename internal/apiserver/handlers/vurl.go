@@ -43,14 +43,14 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	document, err := url.ParseRequestURI(req.Document)
 	if err != nil {
-		h.logger.Error("Тело запроса не содержит ссылки на документ или ссылка неверна")
+		h.logger.Error("Тело запроса не содержит ссылки на документ или ссылка неверна", err.Error(), err)
 		response.ErrorResponse(w, "Тело запроса не содержит ссылки на документ или ссылка неверна", http.StatusBadRequest)
 		return
 	}
 
 	requestDocumentFile, err := http.NewRequest("GET", document.String(), nil)
 	if err != nil {
-		h.logger.Error("Невозможно созать HTTP запрос на скачивание документа")
+		h.logger.Error("Невозможно созать HTTP запрос на скачивание документа", err.Error(), err)
 		response.ErrorResponse(w, "Ошибка получения документа", http.StatusUnprocessableEntity)
 		return
 	}
@@ -69,7 +69,7 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	documentContent, err := io.ReadAll(documentFile.Body)
 	if err != nil {
-		h.logger.Error("Ошибка чтения содержимого документа.", err.Error())
+		h.logger.Error("Ошибка чтения содержимого документа", err.Error(), err)
 		err = fmt.Errorf("Ошибка чтения содержимого документа.")
 		response.ErrorResponse(w, err.Error(), http.StatusUnprocessableEntity)
 		return
@@ -77,14 +77,14 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	sig, err := url.ParseRequestURI(req.Signature)
 	if err != nil {
-		h.logger.Error("Тело запроса не содержит ссылки на файл подптси или ссылка неверна")
+		h.logger.Error("Тело запроса не содержит ссылки на файл подптси или ссылка неверна", err.Error(), err)
 		response.ErrorResponse(w, "Тело запроса не содержит ссылки на файл подптси или ссылка неверна", http.StatusBadRequest)
 		return
 	}
 
 	requestSingFile, err := http.NewRequest("GET", sig.String(), nil)
 	if err != nil {
-		h.logger.Error("Невозможно созать HTTP запрос на скачивание ЭЦП")
+		h.logger.Error("Невозможно созать HTTP запрос на скачивание ЭЦП", err.Error(), err)
 		response.ErrorResponse(w, "Ошибка получения файла подписи", http.StatusUnprocessableEntity)
 		return
 	}
@@ -95,7 +95,7 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	signFile, err := client.Do(requestSingFile)
 	if err != nil {
-		h.logger.Error("Ошибка получения файла подписи", err.Error(), documentFile.StatusCode)
+		h.logger.Error("Ошибка получения файла подписи", err.Error(), signFile.StatusCode)
 		response.ErrorResponse(w, "Ошибка файла подписи документа", http.StatusUnprocessableEntity)
 		return
 	}
@@ -103,7 +103,7 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	signContent, err := io.ReadAll(signFile.Body)
 	if err != nil {
-		h.logger.Error("Ошибка чтения содержимого ЭЦП.", err.Error())
+		h.logger.Error("Ошибка чтения содержимого ЭЦП.", err.Error(), err)
 		err = fmt.Errorf("Ошибка чтения содержимого подписи.")
 		response.ErrorResponse(w, err.Error(), http.StatusUnprocessableEntity)
 		return
@@ -111,7 +111,7 @@ func (h *Handler) VerifyURL(w http.ResponseWriter, r *http.Request) {
 
 	sign, err := signature.NewSign(documentContent, signContent)
 	if err != nil {
-		h.logger.Error("Ошибка при создании экземпляра signature.", err.Error())
+		h.logger.Error("Ошибка при создании экземпляра signature.", err.Error(), err)
 		err = fmt.Errorf("Неудалось идентифицировать формат подписи.")
 		response.ErrorResponse(w, err.Error(), http.StatusUnprocessableEntity)
 		return
