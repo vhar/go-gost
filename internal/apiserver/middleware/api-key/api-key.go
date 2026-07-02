@@ -7,7 +7,12 @@ import (
 
 func Authorize(key string) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		fn := func(w http.ResponseWriter, r *http.Request) {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			if r.Method == http.MethodOptions {
+				w.WriteHeader(http.StatusNoContent)
+				return
+			}
 
 			authorize := r.Header.Get("Authorization")
 
@@ -19,8 +24,6 @@ func Authorize(key string) func(next http.Handler) http.Handler {
 			}
 
 			next.ServeHTTP(w, r)
-		}
-
-		return http.HandlerFunc(fn)
+		})
 	}
 }
