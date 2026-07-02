@@ -61,7 +61,7 @@ func (s *APIServer) configureRoutes() {
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"POST", "OPTIONS"},
 		AllowedHeaders:   []string{"Origin", "Accept", "Content-Type", "Authorization"},
-		AllowCredentials: true,
+		AllowCredentials: false,
 		MaxAge:           300,
 	}).Handler)
 	s.router.Use(apikey.Authorize(s.config.Server.ApiKey))
